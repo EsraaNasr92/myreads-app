@@ -1,11 +1,26 @@
 import React from 'react'
+import Shelf from './Shelf'
 
 class Shelves extends React.Component{
   render(){
+
+    const allBooks = this.props.allBooks
+    console.log(allBooks)
+    const current = allBooks.filter(book => book.shelf === "currentlyReading")
+    const want = allBooks.filter(book => book.shelf === "wantToRead")
+    const read = allBooks.filter(book => book.shelf === "read")
+
+
     return(
       <div className="list-books-content">
         <div>
-          <div className="bookshelf">
+          {/* Curently Reading */}
+          <Shelf books={current} title={"Currently Reading"}/>
+          {/* Want to Read */}
+          <Shelf books={want} title={"Want to Read"}/>
+          {/* Read */}
+          <Shelf books={read} title={"Read"}/>
+          {/* <div className="bookshelf">
             <h2 className="bookshelf-title">Currently Reading</h2>
             <div className="bookshelf-books">
               <ol className="books-grid">
@@ -151,7 +166,7 @@ class Shelves extends React.Component{
                 </li>
               </ol>
             </div>
-          </div>
+          </div>*/}
 
         </div>
       </div>
