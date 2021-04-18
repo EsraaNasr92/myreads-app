@@ -6,6 +6,7 @@ import SearchButton from './components/SearchButton'
 
 import * as BooksAPI from './BooksAPI'
 
+import{ Route} from 'react-router-dom'
 import './App.css'
 
 class BooksApp extends React.Component {
@@ -26,6 +27,7 @@ class BooksApp extends React.Component {
     this.setState({ showSearchPage: state })
   }
 
+
   // Using lifecycle to fetch gbs_api
   componentDidMount(){
     BooksAPI.getAll().then(resp =>
@@ -38,12 +40,6 @@ class BooksApp extends React.Component {
   changeBookShelf = (book, shelf) => {
     BooksAPI.update(book, shelf)
     .then( resp => {book.shelf = shelf})
-    /*this.setState({
-      books: this.state.books.map(b => {
-        b.id === book.id ? (b.shelf = shelf) : b
-        return b
-      })
-    })*/
 
     const updateBooks = this.state.books.map(b => {
       if( b.id === book.id ){
@@ -57,23 +53,17 @@ class BooksApp extends React.Component {
   }
 
 
+
   render() {
     return (
       <div className="app">
-        {this.state.showSearchPage ? (
+        <Route exact path='/' render={() => (
+          <Shelves allBooks={this.state.books} changeShelf={this.changeBookShelf}/>
+
+        )} />
+        <Route exact path='/search' render={() => (
           <Search showSearchPage={this.updateSearchPage}/>
-        ) : (
-          <div className="list-books">
-
-            <div className="list-books-title">
-              <h1>MyReads</h1>
-            </div>
-
-            <Shelves allBooks={this.state.books} changeShelf={this.changeBookShelf}/>
-            <SearchButton showSearchPage={this.updateSearchPage}/>
-
-          </div>
-        )}
+        )} />
       </div>
     )
   }
