@@ -1,11 +1,7 @@
 import React from 'react'
-
 import Shelves from './components/Shelves'
 import Search from './components/Search'
-import SearchButton from './components/SearchButton'
-
 import * as BooksAPI from './BooksAPI'
-
 import{ Route} from 'react-router-dom'
 import './App.css'
 
