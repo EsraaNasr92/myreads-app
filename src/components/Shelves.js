@@ -22,7 +22,7 @@ class Shelves extends React.Component{
       <div className="list-books-content">
         <div>
           <Shelf books={current} title={"Currently Reading"} changeShelf={this.props.changeShelf} />
-          <Shelf books={want} title={"Want to Read"}changeShelf={this.props.changeShelf} />
+          <Shelf books={want} title={"Want to Read"}  changeShelf={this.props.changeShelf} />
           <Shelf books={read} title={"Read"} changeShelf={this.props.changeShelf} />
         </div>
       </div>
