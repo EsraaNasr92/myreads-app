@@ -6,7 +6,7 @@ class Shelf extends React.Component {
 
     const shelfBooks = this.props.books
 
-    console.log("shelfBooks", shelfBooks)
+    //console.log("shelfBooks", shelfBooks)
 
     return(
       <div className="bookshelf">

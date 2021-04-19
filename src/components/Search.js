@@ -30,11 +30,11 @@ class Search extends React.Component{
        BooksAPI.search(query).then(bookResults => {
          bookResults ?
          this.setState({bookResults}) : this.setState({bookResults:[]})
-         console.log("Here's a book result", bookResults);
+         //console.log("Here's a book result", bookResults);
      }).catch(
          // Log the rejection reason
          (reason) => {
-           console.log('Handle rejected promise ('+reason+') here.');
+           //console.log('Handle rejected promise ('+reason+') here.');
          });
 
      }
@@ -49,8 +49,7 @@ class Search extends React.Component{
        }
      };
 
-     print = (book)=>
-     console.log(book);
+    // print = (book)=> console.log(book);
 
   render(){
 
