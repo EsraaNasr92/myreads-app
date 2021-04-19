@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import escapeRegExp from 'escape-string-regexp'
 import * as BooksAPI from '../BooksAPI'
-
+import Shelf from './Shelf'
 
 
 class Search extends React.Component{
@@ -53,7 +53,10 @@ class Search extends React.Component{
      console.log(book);
 
   render(){
+
     const bookResults = this.state.bookResults;
+    const shelfBooks = this.props.books
+
     return(
       <div className="search-books">
         <div className="search-books-bar">
@@ -82,7 +85,7 @@ class Search extends React.Component{
           <ol className="books-grid">
           {bookResults && bookResults.length > 0 && bookResults.map((book)=>(
                 <li key={book.id}>
-
+                  <Shelf  changeShelf={this.props.changeShelf} />
                 </li>
           ))}
 
