@@ -29,7 +29,7 @@ class BooksApp extends React.Component {
     BooksAPI.getAll().then(resp =>
       this.setState({ books: resp })
     )
-    BooksAPI.getAll().then(books => this.setState({ books }))
+
   }
 
   // Change shelf
@@ -50,7 +50,7 @@ class BooksApp extends React.Component {
   }
 
 
-  //Chaneg shelf from serach
+  //Chaneg shelf from search
    changeShelf = (changedBook, shelf) => {
      BooksAPI.update(changedBook, shelf).then(response => {
        changedBook.shelf = shelf

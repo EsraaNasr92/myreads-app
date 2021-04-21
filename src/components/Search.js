@@ -36,7 +36,6 @@ class Search extends React.Component{
 
     }
 
-
     render() {
       const { query, newBooks, searchErr } = this.state
       const { books, changeShelf } = this.props
