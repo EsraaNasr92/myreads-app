@@ -14,6 +14,7 @@ class Search extends React.Component{
     state = {
       query: '',
       newBooks: [],
+      books: [],
       searchErr: false
     };
 
@@ -22,17 +23,62 @@ class Search extends React.Component{
       this.setState({ query });
 
 
-      if (query) {
+    if (query) {
         BooksAPI.search(query.trim(), 20).then(books => {
 
+        if (books) {
+          if(!books.error){
+            console.log(books)
+            books = books.map((book) => {
+                const bookInShelf = this.props.books.find(b => b.id === book.id);
+                if (bookInShelf) {
+                    book.shelf = bookInShelf.shelf;
+                }
+                return book;
+            });
+            this.setState({ searchQuery : 'results', showingBooks : books })
+          }
+          else {
+            this.setState({ searchQuery : 'error', showingBooks : books.error })
+          }
+
+        }
           books.length > 0
             ? this.setState({ newBooks: books, searchErr: false })
             : this.setState({ newBooks: [], searchErr: true })
         })
 
-
       } else this.setState({ newBooks: [], searchErr: false })
 
+/*
+if(query) {
+
+     BooksAPI.search(query, 20).then((books) => {
+       if (books) {
+         if(!books.error){
+           console.log(books)
+           books = books.map((book) => {
+               const bookInShelf = this.props.books.find(b => b.id === book.id);
+               if (bookInShelf) {
+                   book.shelf = bookInShelf.shelf;
+               }
+               return book;
+           });
+           this.setState({ searchQuery : 'results', showingBooks : books })
+         }
+         else {
+           this.setState({ searchQuery : 'error', showingBooks : books.error })
+         }
+
+       }
+     })
+   }
+   else{
+     this.setState({ searchQuery : 'noresults', showingBooks: [] })
+
+   }
+
+*/
 
     }
 
