@@ -29,10 +29,10 @@ class BooksApp extends React.Component {
     BooksAPI.getAll().then(resp =>
       this.setState({ books: resp })
     )
+    BooksAPI.getAll().then(books => this.setState({ books }))
   }
 
   // Change shelf
- //https://knowledge.udacity.com/questions/555691
   changeBookShelf = (book, shelf) => {
     BooksAPI.update(book, shelf)
     .then( resp => {book.shelf = shelf})
@@ -46,9 +46,21 @@ class BooksApp extends React.Component {
     this.setState({
       books: updateBooks
     })
+
   }
 
 
+  //Chaneg shelf from serach
+   changeShelf = (changedBook, shelf) => {
+     BooksAPI.update(changedBook, shelf).then(response => {
+       changedBook.shelf = shelf
+       this.setState(prevState => ({
+         books: prevState.books
+           .filter(book => book.id !== changedBook.id)
+           .concat(changedBook)
+       }))
+     })
+   }
 
   render() {
     return (
@@ -58,7 +70,7 @@ class BooksApp extends React.Component {
 
         )} />
         <Route exact path='/search' render={() => (
-          <Search showSearchPage={this.updateSearchPage} changeShelf={this.changeBookShelf}/>
+          <Search showSearchPage={this.updateSearchPage} changeShelf={this.changeShelf} />
         )} />
       </div>
     )

@@ -1,90 +1,83 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import escapeRegExp from 'escape-string-regexp'
 import * as BooksAPI from '../BooksAPI'
 import Book from './Book'
+import PropTypes from 'prop-types'
 
 
 class Search extends React.Component{
+  static propTypes = {
+      books: PropTypes.array.isRequired,
+      changeShelf: PropTypes.func.isRequired
+    };
 
-  state = {
-       query: '',
-       bookResults: []
-     }
+    state = {
+      query: '',
+      newBooks: [],
+      searchErr: false
+    };
 
-     searchUpdate = (query) => {
-       this.setState({
-         query: query.trim()
-       })
-       this.bookSearch(query);
-     }
-
-     searchClear = () => {
-       this.setState({
-         query: ''
-       })
-     }
-
-     //search through data
-     bookSearch(query) {
-       BooksAPI.search(query).then(bookResults => {
-         bookResults ?
-         this.setState({bookResults}) : this.setState({bookResults:[]})
-         //console.log("Here's a book result", bookResults);
-     }).catch(
-         // Log the rejection reason
-         (reason) => {
-           //console.log('Handle rejected promise ('+reason+') here.');
-         });
-
-     }
-     //display the books
-     resultsMap() {
-       if (this.state.query) {
-         //so we can ignore any special characters and pass them as object literals
-         const result = new RegExp(escapeRegExp(this.state.query), 'i')
-         this.state.bookResults = this.props.books.filter((book) => result.test(book.title))
-       } else {
-         this.state.bookResults = this.props.books
-       }
-     };
-
-    // print = (book)=> console.log(book);
-
-  render(){
-
-    const bookResults = this.state.bookResults;
+    getBooks = event => {
+      const query = event.target.value;
+      this.setState({ query });
 
 
-    return(
-      <div className="search-books">
-        <div className="search-books-bar">
-          <Link to='/'>
-            <button className="close-search">Close</button>
-          </Link>
-          <div className="search-books-input-wrapper">
+      if (query) {
+        BooksAPI.search(query.trim(), 20).then(books => {
 
-            <input
-                type='text'
-                value={this.state.query}
-                onChange={(event)=>this.searchUpdate(event.target.value)}
-                placeholder="look up books by title or author"
-            />
+          books.length > 0
+            ? this.setState({ newBooks: books, searchErr: false })
+            : this.setState({ newBooks: [], searchErr: true })
+        })
 
+
+      } else this.setState({ newBooks: [], searchErr: false })
+
+
+    }
+
+
+    render() {
+      const { query, newBooks, searchErr } = this.state
+      const { books, changeShelf } = this.props
+
+      return (
+        <div className="search-books">
+          <div className="search-books-bar">
+            <Link className="close-search" to="/">
+              Close
+            </Link>
+            <div className="search-books-input-wrapper">
+              <input
+                type="text"
+                placeholder="Search by title or author"
+                value={query}
+                onChange={this.getBooks}
+              />
+            </div>
+          </div>
+          <div className="search-books-results">
+            {newBooks.length > 0 && (
+              <div>
+                <h3>Search returned {newBooks.length} books </h3>
+                <ol className="books-grid">
+                  {newBooks.map(book => (
+                    <Book
+                      book={book}
+                      books={books}
+                      key={book.id}
+                      changeShelf={changeShelf}
+                    />
+                  ))}
+                </ol>
+              </div>
+            )}
+            {searchErr && (
+              <h3>Please try again!</h3>
+            )}
           </div>
         </div>
-        <div className="search-books-results">
-          <ol className="books-grid">
-
-          {bookResults && bookResults.length > 0 && bookResults.map((book)=>(
-              <Book key={book.id} book={book}  changeShelf={this.props.changeShelf} />
-          ))}
-
-          </ol>
-        </div>
-      </div>
-    )
+      );
+    }
   }
-}
-
 export default Search
